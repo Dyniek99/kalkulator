@@ -58,13 +58,14 @@
         <h1>Kalkulator ekranu LED Drinkbary.PL</h1>
         <div class="input-group">
             <label for="simpleModules">Liczba modułów prostych:</label>
-            <input type="number" id="simpleModules" min="0" value="0" required inputmode="numeric" pattern="[0-9]*">            
+            <input type="number" id="simpleModules" min="0" value="0" required inputmode="numeric" pattern="[0-9]*">
         </div>
         <div class="input-group">
             <label for="cornerModules">Liczba modułów narożnych:</label>
             <input type="number" id="cornerModules" min="0" value="0" required inputmode="numeric" pattern="[0-9]*">
         </div>
         <button onclick="calculate()">Oblicz</button>
+        <button id="copyButton" onclick="copyToClipboard()" style="display: none; background-color: #4CAF50; margin-top: 10px;">Skopiuj rozdzielczość</button>
         <button onclick="resetForm()" style="background-color: #cc0000; margin-top: 10px;">Resetuj</button>
         <div id="results">
             <p id="totalResolution">Całkowita rozdzielczość: -</p>
@@ -86,6 +87,7 @@
                 document.getElementById('totalCards').textContent = '';
                 document.getElementById('controllerRequirement').textContent = '';
                 document.getElementById('computerRequirement').textContent = '';
+                document.getElementById('copyButton').style.display = 'none';
             } else {
                 const simpleWidth = 512;
                 const cornerWidth = 768;
@@ -104,6 +106,7 @@
     
                 let computersNeeded = calculateComputersNeeded(controllersNeeded);
                 document.getElementById('computerRequirement').textContent = computersNeeded > 0 ? `Wymagane komputery: ${computersNeeded}` : 'Nie wymaga dodatkowego komputera';
+                document.getElementById('copyButton').style.display = 'block';
             }
         }
     
@@ -122,10 +125,19 @@
         function calculateComputersNeeded(controllersInfo) {
             const [quantity, type] = controllersInfo.split('x');
             const trimmedQuantity = parseInt(quantity.trim());
-            if (trimmedQuantity === 1) {
-                return 0; // Nie potrzeba dodatkowego komputera jeśli jest tylko jeden kontroler TB2 lub TB50
-            }
-            return Math.ceil(trimmedQuantity / 2);
+            return trimmedQuantity <= 1 ? 0 : Math.ceil(trimmedQuantity / 2);
+        }
+    
+        function copyToClipboard() {
+            const resolutionText = document.getElementById('totalResolution').textContent.replace('Całkowita rozdzielczość: ', '');
+            navigator.clipboard.writeText(resolutionText).then(() => {
+                const copyButton = document.getElementById('copyButton');
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Skopiowano';
+                setTimeout(() => copyButton.textContent = originalText, 2000); // Reset the button text after 2 seconds
+            }).catch(err => {
+                console.error('Nie udało się skopiować tekstu: ', err);
+            });
         }
     
         function resetForm() {
@@ -135,8 +147,8 @@
             document.getElementById('totalCards').textContent = 'Suma kart przechwytujących: -';
             document.getElementById('controllerRequirement').textContent = 'Wymagane kontrolery: -';
             document.getElementById('computerRequirement').textContent = 'Wymagane komputery: -';
+            document.getElementById('copyButton').style.display = 'none';
         }
     </script>
-    
 </body>
 </html>
