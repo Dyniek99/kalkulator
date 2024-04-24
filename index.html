@@ -141,14 +141,16 @@
         }
     
         function resetForm() {
-            document.getElementById('simpleModules').value = '0';
-            document.getElementById('cornerModules').value = '0';
+            document.getElementById('simpleModules').value = '';
+            document.getElementById('cornerModules').value = '';
             document.getElementById('totalResolution').textContent = 'Całkowita rozdzielczość: -';
             document.getElementById('totalCards').textContent = 'Suma kart przechwytujących: -';
             document.getElementById('controllerRequirement').textContent = 'Wymagane kontrolery: -';
             document.getElementById('computerRequirement').textContent = 'Wymagane komputery: -';
             document.getElementById('copyButton').style.display = 'none';
+            document.getElementById('copyButton').textContent = 'Skopiuj rozdzielczość'; // Reset text of the copy button if it was changed
         }
+
     </script>
 </body>
 </html>
